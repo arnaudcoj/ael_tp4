@@ -1,0 +1,5 @@
+#! /bin/bash
+javac -encoding ISO-8859-1 -d bin src/Token.java src/Yytoken.java `find src -name 'UL*.java'`
+java -cp bin -jar lib/JFlex.jar $1
+javac -cp bin -d bin src/Yylex.java
+rm src/Yylex.java

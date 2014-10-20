@@ -1,0 +1,2 @@
+#! /bin/bash
+java -cp bin:lib/drawing.jar $1 $2

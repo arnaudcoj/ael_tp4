@@ -1,0 +1,26 @@
+/*
+	Déclaration d'une classe java simple.
+*/
+public class ClasseJavaSimple{
+	// Un compteur
+	private int compteur;
+	
+	/*
+		Constructeur de la classe "ClasseJavaSimple"
+	*/
+	public ClasseJavaSimple(){
+		this.compteur = 0;
+	}
+	
+	// Méthode qui incrémente le compteur
+	public int incrementer(){
+		/*  On incrémente le compteur */
+		this.compteur = this.compteur + 1;
+	}
+	
+	// Méthode qui décrémente le compteur
+	public int decrementer(){
+		/*  On décrémente le compteur */
+		this.compteur = this.compteur + 1;
+	}
+}

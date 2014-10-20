@@ -1,0 +1,2 @@
+#! /bin/bash
+javac -encoding ISO-8859-1 -cp bin:lib/drawing.jar -d bin $1
