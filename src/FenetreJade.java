@@ -18,21 +18,25 @@ public class FenetreJade {
     public void nord() throws drawing.DrawingException {
 	Point or = this.frame.getCurrentPoint();
 	if(this.crayonBaisse) 
-	    this.frame.drawTo(new Point(or.x, or.y + this.pas));
+	    this.frame.drawTo(new Point(or.x, or.y - this.pas));
 	else
-	    this.frame.goTo(new Point(or.x, or.y + this.pas));
+	    this.frame.goTo(new Point(or.x, or.y - this.pas));
 
     }
 
     public void sud() throws drawing.DrawingException {
 	Point or = this.frame.getCurrentPoint();
 	if(this.crayonBaisse)
-	    this.frame.drawTo(new Point(or.x, or.y - this.pas));
+	    this.frame.drawTo(new Point(or.x, or.y + this.pas));
 	else
-	    this.frame.goTo(new Point(or.x, or.y - this.pas));
+	    this.frame.goTo(new Point(or.x, or.y + this.pas));
     }
 
     public void est() throws drawing.DrawingException {
+	if(this.frame == null)
+	    System.out.println("frame est null");
+	else
+	    System.out.println("frame n'est pas null");
 	Point or = this.frame.getCurrentPoint();
 	if(this.crayonBaisse) 
 	    this.frame.drawTo(new Point(or.x + this.pas, or.y));

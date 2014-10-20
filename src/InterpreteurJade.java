@@ -23,8 +23,22 @@ public class InterpreteurJade {
 	}
 	
 	public void traiterUniteLexicale(Yytoken ul) throws Exception {
-		// TODO A compléter
-		System.out.println(ul.toString());
+	    switch(ul.getToken()) {
+	    case nord:
+		fenetre.nord();
+		break;
+	    case ouest:
+		fenetre.ouest();
+		break;
+	    case sud:
+		fenetre.sud();
+		break;
+	    case est:
+		fenetre.est();
+		break;
+	    default:
+		System.out.println("Commande non reconnue");
+	    }
 	}
 	
 	/**
@@ -34,7 +48,7 @@ public class InterpreteurJade {
 		InterpreteurJade interpreteur = new InterpreteurJade();
 		System.out.println("\nBievenue dans l'interpréteur Jade !\n");
 		Yytoken ul = null;
-		try{
+			try{
 			while (ul == null || ul.getToken() != Token.eof){
 				if(ul != null){
 					if(ul.getToken() == Token.erreur){
@@ -48,9 +62,11 @@ public class InterpreteurJade {
 			}
 			System.out.println("\n\nMerci d'avoir utilisé l'interpréteur Jade !\n");
 			System.exit(1);
-		} catch(Exception e){
-			System.out.println("\n\nUne erreur imprévue est survenue.\nL'interpréteur Jade doit se fermer.");
+					} 
+			catch(Exception e){
+			    e.printStackTrace() ;
+			    System.out.println("\n\nUne erreur imprévue est survenue.\nL'interpréteur Jade doit se fermer.");
 			System.exit(0);
-		}
+			}
 	}
 }

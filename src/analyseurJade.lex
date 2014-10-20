@@ -1,9 +1,9 @@
 %%
 %unicode
 
-%state ENTIER_LU
-%state FOIS_LU
-%state PAS
+%xstate ENTIER_LU
+%xstate FOIS_LU
+%xstate PAS
 
 NOMBRE_ENTIER=[[:digit:]]*
 ESPACES=[[:space:]]*
