@@ -13,6 +13,7 @@ public class FenetreJade {
 	this.crayonBaisse = true;
 	this.pas = 1;
 	this.frame = new DrawingFrame();
+	this.frame.goTo(new Point(0,0));
     }
 
     public void nord() throws drawing.DrawingException {
