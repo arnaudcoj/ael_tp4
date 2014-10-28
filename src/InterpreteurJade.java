@@ -9,7 +9,7 @@ public class InterpreteurJade {
 	/**
 	 * Constructeur
 	 */
-	public InterpreteurJade(){
+	public InterpreteurJade() throws drawing.DrawingException {
 		this.fenetre = new FenetreJade();
 		// créer un Yylex qui va prendre ses entrées au clavier
 		this.analyseur = new Yylex(new BufferedReader(new InputStreamReader(System.in)));
@@ -23,6 +23,7 @@ public class InterpreteurJade {
 	}
 	
 	public void traiterUniteLexicale(Yytoken ul) throws Exception {
+	    int value;
 	    switch(ul.getToken()) {
 	    case nord:
 		fenetre.nord();
@@ -36,6 +37,55 @@ public class InterpreteurJade {
 	    case est:
 		fenetre.est();
 		break;
+	    case lever:
+		fenetre.lever();
+		break;
+	    case baisser:
+		fenetre.baisser();
+		break;
+	    case entier:
+		value = (int) ul.getValue();
+		ul = this.lireProchaineUniteLexicale();
+		if(ul != null && ul.getToken() == Token.fois)
+		    {
+			ul = this.lireProchaineUniteLexicale();
+			if(ul != null)
+			    switch(ul.getToken()) {
+			    case nord:
+				for(int i = 0; i < value; i++)
+				    fenetre.nord();
+				break;
+			    case sud:
+				for(int i = 0; i < value; i++)
+				    fenetre.sud();
+				break;
+			    case est:
+				for(int i = 0; i < value; i++)
+				    fenetre.est();
+				break;
+			    case ouest:
+				for(int i = 0; i < value; i++)
+				    fenetre.ouest();
+				break;
+			    default:
+				System.out.println("Commande non reconnue");
+			    }
+		    }
+		break;
+	    case pas:
+		ul = this.lireProchaineUniteLexicale();
+		if(ul != null && ul.getToken() == Token.entier)
+		    fenetre.pas((int) ul.getValue());
+		else
+		    System.out.println("Commande non reconnue");
+		break;
+	    case origine:
+		ul = this.lireProchaineUniteLexicale();
+		if(ul != null && ul.getToken() == Token.point)
+		    fenetre.origine((java.awt.Point) ul.getValue());
+		else
+		    System.out.println("Commande non reconnue");
+		break;		
 	    default:
 		System.out.println("Commande non reconnue");
 	    }
@@ -44,7 +94,7 @@ public class InterpreteurJade {
 	/**
 	 * La classe principale de l'interpréteur Jade.
 	 */
-	public static void main(String[] args){
+	public static void main(String[] args) throws drawing.DrawingException {
 		InterpreteurJade interpreteur = new InterpreteurJade();
 		System.out.println("\nBievenue dans l'interpréteur Jade !\n");
 		Yytoken ul = null;

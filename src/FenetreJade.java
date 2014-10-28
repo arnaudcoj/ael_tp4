@@ -9,50 +9,56 @@ public class FenetreJade {
     private DrawingFrame frame;
 
     //Methods
-    public FenetreJade() {
+    public FenetreJade() throws drawing.DrawingException {
 	this.crayonBaisse = true;
-	this.pas = 1;
+	this.pas = 10;
 	this.frame = new DrawingFrame();
 	this.frame.goTo(new Point(0,0));
     }
 
     public void nord() throws drawing.DrawingException {
 	Point or = this.frame.getCurrentPoint();
-	if(this.crayonBaisse) 
-	    this.frame.drawTo(new Point(or.x, or.y - this.pas));
-	else
-	    this.frame.goTo(new Point(or.x, or.y - this.pas));
-
+	if(or.y >= this.pas)
+	    { 
+		if(this.crayonBaisse) 
+		    this.frame.drawTo(new Point(or.x, or.y - this.pas));
+		else
+		    this.frame.goTo(new Point(or.x, or.y - this.pas));
+	    }
     }
 
     public void sud() throws drawing.DrawingException {
 	Point or = this.frame.getCurrentPoint();
-	if(this.crayonBaisse)
-	    this.frame.drawTo(new Point(or.x, or.y + this.pas));
-	else
-	    this.frame.goTo(new Point(or.x, or.y + this.pas));
+	if(or.y + this.pas <= this.frame.getHeight())
+	    {
+		if(this.crayonBaisse)
+		    this.frame.drawTo(new Point(or.x, or.y + this.pas));
+		else
+		    this.frame.goTo(new Point(or.x, or.y + this.pas));
+	    }
     }
 
     public void est() throws drawing.DrawingException {
-	if(this.frame == null)
-	    System.out.println("frame est null");
-	else
-	    System.out.println("frame n'est pas null");
 	Point or = this.frame.getCurrentPoint();
-	if(this.crayonBaisse) 
-	    this.frame.drawTo(new Point(or.x + this.pas, or.y));
-	else
-	    this.frame.goTo(new Point(or.x + this.pas, or.y));
+	if(or.x + this.pas <= this.frame.getWidth())
+	    {
+		if(this.crayonBaisse) 
+		    this.frame.drawTo(new Point(or.x + this.pas, or.y));
+		else
+		    this.frame.goTo(new Point(or.x + this.pas, or.y));
+	    }
     }
 
     public void ouest() throws drawing.DrawingException {
 	Point or = this.frame.getCurrentPoint();
-	if(this.crayonBaisse)
-	    this.frame.drawTo(new Point(or.x - this.pas, or.y));
-	else
-	    this.frame.goTo(new Point(or.x - this.pas, or.y));    
+	if(or.x >= this.pas)
+	    {
+		if(this.crayonBaisse)
+		    this.frame.drawTo(new Point(or.x - this.pas, or.y));
+		else
+		    this.frame.goTo(new Point(or.x - this.pas, or.y));    
+	    }
     }
-
     public void origine(Point p) throws drawing.DrawingException {
 	this.frame.goTo(p);
     }
