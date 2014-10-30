@@ -14,20 +14,20 @@ ESPACES=" "*
 DIRECTIONS="nord"|"sud"|"est"|"ouest"
 %%
    
-<YYINITIAL> "repeter"{ESPACES} {yybegin(REPETER_LU); return new ULMotClef(Token.repeter);}
-<YYINITIAL> {ESPACES}"fin repeter" {return new ULMotClef(Token.fin);}
-<YYINITIAL> {ESPACES}"fin definir" {return new ULMotClef(Token.fin);}
-<YYINITIAL> "nord" {return new ULMotClef(Token.nord);}
-<YYINITIAL> "sud" {return new ULMotClef(Token.sud);}
-<YYINITIAL> "est" {return new ULMotClef(Token.est);}
-<YYINITIAL> "ouest" {return new ULMotClef(Token.ouest);}
-<YYINITIAL> "quitter" {return new ULMotClef(Token.eof);}
-<YYINITIAL> "baisser" {return new ULMotClef(Token.baisser);}
-<YYINITIAL> "lever" {return new ULMotClef(Token.lever);}
+<YYINITIAL> {ESPACES}"repeter"{ESPACES} {yybegin(REPETER_LU); return new ULMotClef(Token.repeter);}
+<YYINITIAL> {ESPACES}"fin repeter"{ESPACES} {return new ULMotClef(Token.fin);}
+<YYINITIAL> {ESPACES}"fin definir"{ESPACES} {return new ULMotClef(Token.fin);}
+<YYINITIAL> {ESPACES}"nord"{ESPACES} {return new ULMotClef(Token.nord);}
+<YYINITIAL> {ESPACES}"sud"{ESPACES} {return new ULMotClef(Token.sud);}
+<YYINITIAL> {ESPACES}"est"{ESPACES} {return new ULMotClef(Token.est);}
+<YYINITIAL> {ESPACES}"ouest"{ESPACES} {return new ULMotClef(Token.ouest);}
+<YYINITIAL> {ESPACES}"quitter"{ESPACES} {return new ULMotClef(Token.eof);}
+<YYINITIAL> {ESPACES}"baisser"{ESPACES} {return new ULMotClef(Token.baisser);}
+<YYINITIAL> {ESPACES}"lever"{ESPACES} {return new ULMotClef(Token.lever);}
 <YYINITIAL> "\n" {}
 <YYINITIAL> {NOMBRE_ENTIER} {yybegin(ENTIER_LU); return new ULEntier(Integer.parseInt(yytext()));}
-<YYINITIAL> "pas"{ESPACES} {yybegin(PAS); return new ULMotClef(Token.pas);}
-<YYINITIAL> "origine(" {yybegin(ORIGINE_1); return new ULMotClef(Token.origine);}
+<YYINITIAL> {ESPACES}"pas"{ESPACES} {yybegin(PAS); return new ULMotClef(Token.pas);}
+<YYINITIAL> {ESPACES}"origine("{ESPACES} {yybegin(ORIGINE_1); return new ULMotClef(Token.origine);}
 <YYINITIAL> [^] {return new ULMotClef(Token.erreur);}
 
 <REPETER_LU> {NOMBRE_ENTIER} {yybegin(REPETER_ENTIER); return new ULEntier(Integer.parseInt(yytext()));}
@@ -44,7 +44,7 @@ DIRECTIONS="nord"|"sud"|"est"|"ouest"
 <ORIGINE_1> "\n" {}
 <ORIGINE_1> [^] {return new ULMotClef(Token.erreur);}
 
-<ORIGINE_2> ")" {yybegin(YYINITIAL);}
+<ORIGINE_2> {ESPACES}")"{ESPACES} {yybegin(YYINITIAL);}
 <ORIGINE_2> "\n" {}
 <ORIGINE_2> [^] {return new ULMotClef(Token.erreur);}
 
@@ -54,10 +54,10 @@ DIRECTIONS="nord"|"sud"|"est"|"ouest"
 <ENTIER_LU> [^] {return new ULMotClef(Token.erreur);}
 
 
-<FOIS_LU> "nord" {yybegin(YYINITIAL) ; return new ULMotClef(Token.nord);}
-<FOIS_LU> "sud" {yybegin(YYINITIAL) ; return new ULMotClef(Token.sud);}
-<FOIS_LU> "est" {yybegin(YYINITIAL) ; return new ULMotClef(Token.est);}
-<FOIS_LU> "ouest" {yybegin(YYINITIAL) ; return new ULMotClef(Token.ouest);}
+<FOIS_LU> {ESPACES}"nord"{ESPACES} {yybegin(YYINITIAL) ; return new ULMotClef(Token.nord);}
+<FOIS_LU> {ESPACES}"sud"{ESPACES} {yybegin(YYINITIAL) ; return new ULMotClef(Token.sud);}
+<FOIS_LU> {ESPACES}"est"{ESPACES} {yybegin(YYINITIAL) ; return new ULMotClef(Token.est);}
+<FOIS_LU> {ESPACES}"ouest"{ESPACES} {yybegin(YYINITIAL) ; return new ULMotClef(Token.ouest);}
 <FOIS_LU> "\n" {}
 <FOIS_LU> [^] {return new ULMotClef(Token.erreur);}
 

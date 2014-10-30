@@ -1,11 +1,17 @@
 import java.io.*;
+import java.util.List;
 import java.util.LinkedList;
+import java.util.Iterator;
 
 public class InterpreteurJade {
     // La fenetre où dessiner
     private FenetreJade fenetre;
     // L'analyseur syntaxique décrit dans le fichier "analyseurJade.lex"
     private Yylex analyseur;
+    // Liste des Tokens lus dans le cas "repeter n fois actions fin repeter"
+    List<Yytoken> actions;
+    // Iterateur dans actions
+    Iterator itAction;
 	
     /**
      * Constructeur
@@ -21,6 +27,13 @@ public class InterpreteurJade {
      */
     public Yytoken lireProchaineUniteLexicale() throws Exception {
 	return analyseur.yylex();
+    }
+
+    public Yytoken lireProchaineUniteLexicaleRepeter() throws Exception {
+	if(this.itAction.hasNext())
+	    return (Yytoken) this.itAction.next();
+	else
+	    return null;
     }
 	
     public void traiterFois(Yytoken ul) throws Exception {
@@ -57,10 +70,10 @@ public class InterpreteurJade {
     public void traiterFoisRepeter(Yytoken ul) throws Exception {
 	int value;
 	value = (int) ul.getValue();
-	ul = this.lireProchaineUniteLexicale();
+	ul = this.lireProchaineUniteLexicaleRepeter();
 	if(ul != null && ul.getToken() == Token.fois)
 	    {
-		ul = this.lireProchaineUniteLexicale();
+		ul = this.lireProchaineUniteLexicaleRepeter();
 		if(ul != null)
 		    switch(ul.getToken()) {
 		    case nord:
@@ -95,7 +108,7 @@ public class InterpreteurJade {
 
 
     public void traiterPasRepeter(Yytoken ul) throws Exception {
-	ul = this.lireProchaineUniteLexicale();
+	ul = this.lireProchaineUniteLexicaleRepeter();
 	if(ul != null && ul.getToken() == Token.entier)
 	    fenetre.pas((int) ul.getValue());
 	else
@@ -111,7 +124,7 @@ public class InterpreteurJade {
     }
     
     public void traiterOrigineRepeter(Yytoken ul) throws Exception {
-	ul = this.lireProchaineUniteLexicale();
+	ul = this.lireProchaineUniteLexicaleRepeter();
 	if(ul != null && ul.getToken() == Token.point)
 	    fenetre.origine((java.awt.Point) ul.getValue());
 	else
@@ -120,17 +133,65 @@ public class InterpreteurJade {
 
     public void traiterRepeter(Yytoken ul) throws Exception {
 	int value;
-	LinkedList<Yytoken> actions = new LinkedList<Yytoken>();
-	ul = this.lireProchaineUniteLexicale();
-	if(ul != null && ul.getToken() == Token.entier) {
-	    value = (int) ul.getValue();
-	    ul = this.lireProchaineUniteLexicale();
-	    if(ul != null && ul.getToken() == Token.fois) {
-		while((ul = this.lireProchaineUniteLexicale()).getToken() != Token.fin)
-		    actions.add(ul);
-		for(int i = 0; i < value; i++)
-		    for(Yytoken action : actions)
-			this.traiterUniteLexicaleRepeter(action);
+	actions = new LinkedList<Yytoken>();
+	Yytoken ulRepeter = ul;
+	
+	// Vérification que ul est bien un Token.repeter
+	if(ulRepeter == null || ulRepeter.getToken() != Token.repeter)
+	    return;
+
+	ulRepeter = this.lireProchaineUniteLexicale();
+	
+	// Vérification que ulRepeter est bien un Token.entier
+	if(ulRepeter == null || ulRepeter.getToken() != Token.entier)
+	    return;
+
+	value = (int) ulRepeter.getValue();
+   
+	ulRepeter = this.lireProchaineUniteLexicale();
+
+	// Vérification que ulRepeter est bien un Token.fois
+	if(ulRepeter == null || ulRepeter.getToken() != Token.fois)
+	    return;
+	
+	// Remplissage de la liste des actions
+	this.remplirActions();
+	
+	this.repeterActions(value);
+    }
+
+    private void remplirActions() throws Exception {
+	Yytoken ulRepeter;
+	ulRepeter = this.lireProchaineUniteLexicale(); 
+	
+	/* Tant que pas fini ni un autre repeter,
+	   ajout des actions dans this.actions
+	*/
+	while(ulRepeter != null && ulRepeter.getToken() != Token.fin && ulRepeter.getToken() != Token.repeter) {
+	    this.actions.add(ulRepeter);	    
+	    ulRepeter = this.lireProchaineUniteLexicale(); 
+	}
+
+	
+	if(ulRepeter.getToken() == Token.repeter)
+	    {
+		System.out.println("Impossible d'imbriquer repeter");
+		actions.clear();
+		return;
+	    }
+    }
+
+    private void repeterActions(int nbFois) throws Exception  {
+	Yytoken ulRepeter;	
+	
+	// Traitement des unités lexicales de la liste nbFois
+	for(int i = 0; i < nbFois; i++) {
+	    this.itAction = this.actions.iterator();
+	    // Tant que pas fini
+	    ulRepeter = this.lireProchaineUniteLexicaleRepeter();
+	    while(ulRepeter != null && ulRepeter.getToken() != Token.fin) {
+		this.traiterUniteLexicaleRepeter(ulRepeter);
+		ulRepeter = this.lireProchaineUniteLexicaleRepeter();
 	    }
 	}
     }
@@ -163,7 +224,10 @@ public class InterpreteurJade {
 	    break;
 	case origine:
 	    this.traiterOrigineRepeter(ul);
-	    break;		
+	    break;
+	case repeter:
+	    this.traiterRepeter(ul);
+	    break;
 	default:
 	    System.out.println("Commande non reconnue");
 	}
@@ -191,17 +255,14 @@ public class InterpreteurJade {
 	    fenetre.baisser();
 	    break;
 	case entier:
-	    this.traiterFois(ul);
+	    this.traiterFoisRepeter(ul);
 	    break;
 	case pas:
-	    this.traiterPas(ul);
+	    this.traiterPasRepeter(ul);
 	    break;
 	case origine:
-	    this.traiterOrigine(ul);
+	    this.traiterOrigineRepeter(ul);
 	    break;		
-	case repeter:
-	    this.traiterRepeter(ul);
-	    break;
 	default:
 	    System.out.println("Commande non reconnue");
 	}
