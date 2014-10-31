@@ -8,7 +8,6 @@
 %xstate ORIGINE_2
 %xstate REPETER_LU
 %xstate REPETER_ENTIER
-%xstate DEFINIR_LU
 
 NOMBRE_ENTIER=[[:digit:]]+
 ESPACES=" "*
@@ -16,7 +15,7 @@ ALNUM=[[:jletterdigit:]]+
 %%
    
 <YYINITIAL> {ESPACES}"repeter"{ESPACES} {yybegin(REPETER_LU); return new ULMotClef(Token.repeter);}
-<YYINITIAL> {ESPACES}"definir"{ESPACES} {yybegin(DEFINIR_LU); return new ULMotClef(Token.definir); }
+<YYINITIAL> {ESPACES}"definir"{ESPACES} {return new ULMotClef(Token.definir); }
 <YYINITIAL> {ESPACES}"fin repeter"{ESPACES} {return new ULMotClef(Token.fin);}
 <YYINITIAL> {ESPACES}"fin definir"{ESPACES} {return new ULMotClef(Token.fin);}
 <YYINITIAL> {ESPACES}"nord"{ESPACES} {return new ULMotClef(Token.nord);}
@@ -26,15 +25,11 @@ ALNUM=[[:jletterdigit:]]+
 <YYINITIAL> {ESPACES}"quitter"{ESPACES} {return new ULMotClef(Token.eof);}
 <YYINITIAL> {ESPACES}"baisser"{ESPACES} {return new ULMotClef(Token.baisser);}
 <YYINITIAL> {ESPACES}"lever"{ESPACES} {return new ULMotClef(Token.lever);}
-<YYINITIAL> "\n" {}
+<YYINITIAL> {ESPACES}"\n" {}
 <YYINITIAL> {NOMBRE_ENTIER} {yybegin(ENTIER_LU); return new ULEntier(Integer.parseInt(yytext()));}
 <YYINITIAL> {ESPACES}"pas"{ESPACES} {yybegin(PAS); return new ULMotClef(Token.pas);}
 <YYINITIAL> {ESPACES}"origine("{ESPACES} {yybegin(ORIGINE_1); return new ULMotClef(Token.origine);}
-<YYINITIAL> [^] {return new ULMotClef(Token.erreur);}
-
-<DEFINIR_LU> {ALNUM} {yybegin(YYINITIAL); return new ULIdent(yytext());}
-<DEFINIR_LU> "\n" {}
-<DEFINIR_LU> [^] {return new ULMotClef(Token.erreur);}
+<YYINITIAL> {ALNUM} {return new ULIdent(yytext());}
 
 <REPETER_LU> {NOMBRE_ENTIER} {yybegin(REPETER_ENTIER); return new ULEntier(Integer.parseInt(yytext()));}
 <REPETER_LU> "\n" {}
